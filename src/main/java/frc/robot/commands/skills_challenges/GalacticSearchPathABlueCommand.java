@@ -10,20 +10,20 @@ import edu.wpi.first.wpilibj2.command.*;
 
 //  name is kinda long but whatever lmao
 //  you can copy this file to use as a template for others
-public class GalacticSearchPathARedCommand extends SequentialCommandGroup
+public class GalacticSearchPathABlueCommand extends SequentialCommandGroup
 {
-	public GalacticSearchPathARedCommand(Mecanum dt, Intake intake)
+	public GalacticSearchPathABlueCommand(Mecanum dt, Intake intake)
 	{
 		addCommands
 		(
             new RunCommand(intake::intakeOn, intake),   //  you only need the intake business on the galactic search challenges
+            new DriveToDistanceCommand(4.72, dt),
+            new TurnToAngleCommand(-72.565, dt),
+            new DriveToDistanceCommand(2.41, dt),
+            new TurnToAngleCommand(81.87, dt),
+            new DriveToDistanceCommand(1.7, dt),
+            new TurnToAngleCommand(-9.31, dt),
             new DriveToDistanceCommand(1.524, dt),
-            new TurnToAngleCommand(26.565, dt),
-            new DriveToDistanceCommand(1.704, dt),
-            new TurnToAngleCommand(-98.13, dt),
-            new DriveToDistanceCommand(2.410),
-            new TurnToAngleCommand(71.65),
-            new DriveToDistanceCommand(3.81),
             null,    //  Continue ;) Good luck soldiers
             new RunCommand(intake::intakeOff, intake)   //  just make sure to end with the intake off 
             //  (technically once the robot is disabled it will turn off automatically BUT good practice)
@@ -33,13 +33,13 @@ public class GalacticSearchPathARedCommand extends SequentialCommandGroup
         /*
             auton = new Object[][]
             {
-                {drive, 1.524},
-                {turn, 26.565},
-                {drive, 1.704},
-                {turn, -98.13},
-                {drive, 2.410},
-                {turn, 71.65},
-                {drive, 3.81}
+                {drive, 4.72},
+                {turn, -72.565},
+                {drive, 2.41},
+                {turn, 81.87},
+                {drive, 1.7},
+                {turn, -9.31},
+                {drive, 1.524}
             };
         */
     }

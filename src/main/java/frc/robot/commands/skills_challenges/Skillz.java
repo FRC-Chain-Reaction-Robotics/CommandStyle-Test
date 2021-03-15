@@ -181,7 +181,7 @@ public class Skillz
         };
     }
     
-	public void selectMatthewPath()
+	public void selectBouncePath() //originally called "selectMatthewPath", in case this is being tested and you get an error
 	{
         auton = new Object[][]
         {
