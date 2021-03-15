@@ -24,7 +24,6 @@ public class BouncePathCommand extends SequentialCommandGroup
             new TurnToAngleCommand(-76, dt),
             new DriveToDistanceCommand(1.704, dt),
             new TurnToAngleCommand(136, dt),
-            null,    //  Continue ;) Good luck soldiers
             //  (technically once the robot is disabled it will turn off automatically BUT good practice)
         );
     

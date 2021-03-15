@@ -16,23 +16,23 @@ public class SlalomCommand extends SequentialCommandGroup
 	{
 		addCommands
 		( //dunno if this works
-            new DriveToDistanceCommand(0.9, dt),
-            new TurnToAngleCommand(-45.0, dt),
-            new DriveToDistanceCommand(2.155, dt),
-            new TurnToAngleCommand(45.0, dt),
-            new DriveToDistanceCommand(3.302, dt),
-            new TurnToAngleCommand(45.0, dt),
-            new DriveToDistanceCommand(2.067, dt),
-            new TurnToAngleCommand(-95.0, dt),
-            new DriveToDistanceCommand(1.27, dt),
-            new TurnToAngleCommand(-80.0, dt),
-            new DriveToDistanceCommand(1.27, dt),
-            new TurnToAngleCommand(-100.0, dt),
-            new DriveToDistanceCommand(2.342, dt),
-            new TurnToAngleCommand(50.0, dt),
-            new DriveToDistanceCommand(3.048, dt),
-            new TurnToAngleCommand(42.0, dt),
-            new DriveToDistanceCommand(2.155, dt)
+                  new DriveToDistanceCommand(0.9, dt),
+                  new TurnToAngleCommand(-45.0, dt),
+                  new DriveToDistanceCommand(2.155, dt),
+                  new TurnToAngleCommand(45.0, dt),
+                  new DriveToDistanceCommand(3.302, dt),
+                  new TurnToAngleCommand(45.0, dt),
+                  new DriveToDistanceCommand(2.067, dt),
+                  new TurnToAngleCommand(-95.0, dt),
+                  new DriveToDistanceCommand(1.27, dt),
+                  new TurnToAngleCommand(-80.0, dt),
+                  new DriveToDistanceCommand(1.27, dt),
+                  new TurnToAngleCommand(-100.0, dt),
+                  new DriveToDistanceCommand(2.342, dt),
+                  new TurnToAngleCommand(50.0, dt),
+                  new DriveToDistanceCommand(3.048, dt),
+                  new TurnToAngleCommand(42.0, dt),
+                  new DriveToDistanceCommand(2.155, dt)
             );
 	}
 }

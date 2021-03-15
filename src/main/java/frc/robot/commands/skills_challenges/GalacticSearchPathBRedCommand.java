@@ -21,7 +21,6 @@ public class GalacticSearchPathBRedCommand extends SequentialCommandGroup
             new DriveToDistanceCommand(2.155, dt),
             new TurnToAngleCommand(45, dt),
             new DriveToDistanceCommand(2.268, dt),
-            null,    
             new RunCommand(intake::intakeOff, intake)   
             
         );

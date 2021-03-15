@@ -21,10 +21,9 @@ public class GalacticSearchPathARedCommand extends SequentialCommandGroup
             new TurnToAngleCommand(26.565, dt),
             new DriveToDistanceCommand(1.704, dt),
             new TurnToAngleCommand(-98.13, dt),
-            new DriveToDistanceCommand(2.410),
-            new TurnToAngleCommand(71.65),
-            new DriveToDistanceCommand(3.81),
-            null,    //  Continue ;) Good luck soldiers
+            new DriveToDistanceCommand(2.410, dt),
+            new TurnToAngleCommand(71.65, dt),
+            new DriveToDistanceCommand(3.81, dt),
             new RunCommand(intake::intakeOff, intake)   //  just make sure to end with the intake off 
             //  (technically once the robot is disabled it will turn off automatically BUT good practice)
         );

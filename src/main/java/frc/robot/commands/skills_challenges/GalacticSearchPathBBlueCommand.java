@@ -21,7 +21,6 @@ public class GalacticSearchPathBBlueCommand extends SequentialCommandGroup
             new DriveToDistanceCommand(2.155, dt),
             new TurnToAngleCommand(-45, dt),
             new DriveToDistanceCommand(0.762, dt),
-            null,    //  Continue ;) Good luck soldiers
             new RunCommand(intake::intakeOff, intake)   //  just make sure to end with the intake off 
             //  (technically once the robot is disabled it will turn off automatically BUT good practice)
         );
