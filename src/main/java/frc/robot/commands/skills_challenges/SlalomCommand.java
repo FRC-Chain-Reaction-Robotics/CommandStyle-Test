@@ -5,7 +5,6 @@
 package frc.robot.commands.skills_challenges;
 
 import frc.robot.commands.drive.*;
-import frc.robot.commands.shoot.StartShooter;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.*;
 

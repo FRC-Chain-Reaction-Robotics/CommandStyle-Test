@@ -6,8 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
 import frc.robot.commands.*;
-import frc.robot.commands.drive.*;
-import frc.robot.commands.shoot.*;
+// import frc.robot.commands.drive.*;
+// import frc.robot.commands.shoot.*;
 import frc.robot.commands.skills_challenges.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.*;
@@ -72,7 +72,6 @@ public class RobotContainer
 	public Command getAutonomousCommand()
 	{
 		// var auto = new ShootCommand(Shooter.RPM_10FTLINE, shooter);
-		Command auto = new ExamplePath(dt);
-		return auto;
+		return new GalacticSearchPathARedCommand(dt, intake);
 	}
 }
