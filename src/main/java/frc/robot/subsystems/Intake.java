@@ -10,14 +10,23 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Intake extends SubsystemBase {
-  private static TalonSRX intakeMotor = new TalonSRX(Constants.INTAKE_MOTOR_ID);
-  
-  public void intakeOn() {
-    intakeMotor.set(ControlMode.PercentOutput, 1);
-  }
+public class Intake extends SubsystemBase
+{	
+	TalonSRX intakeMotor = new TalonSRX(Constants.INTAKE_MOTOR_ID);
+	TalonSRX leftHopperMotor = new TalonSRX(Constants.LEFT_HOPPER_MOTOR_ID);
+	TalonSRX rightHopperMotor = new TalonSRX(Constants.RIGHT_HOPPER_MOTOR_ID);
+	
+	public Intake()
+	{
+        rightHopperMotor.follow(leftHopperMotor);
+        intakeMotor.setInverted(false);
+	}
 
-  public void intakeOff() {
-    intakeMotor.set(ControlMode.PercentOutput, 0);
-  }
+	public void intakeOn() {
+		intakeMotor.set(ControlMode.PercentOutput, 1);
+	}
+
+	public void intakeOff() {
+		intakeMotor.set(ControlMode.PercentOutput, 0);
+	}
 }

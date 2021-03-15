@@ -9,51 +9,67 @@ import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase
 {
-    CANSparkMax rightShooter;
-    CANSparkMax leftShooter;
-    CANPIDController shooterPID; 
+	CANSparkMax rightShooter;
+	CANSparkMax leftShooter;
+	CANPIDController shooterPID;
+	CANEncoder leftEncoder = leftShooter.getEncoder();
 
-    double kP, kI, kD;
-    final double RPM_10FTLINE = 1350;
 
-  /** Creates a new Shooter. */
-  public Shooter() 
-  {
-      rightShooter = new CANSparkMax(Constants.RIGHT_SHOOTER_MOTOR_ID, MotorType.kBrushless);
-      leftShooter = new CANSparkMax(Constants.LEFT_SHOOTER_MOTOR_ID, MotorType.kBrushless);  //  left and right
-      shooterPID = leftShooter.getPIDController();
+	double kP, kI, kD;
+	public static final double RPM_10FTLINE = 1350; 
+	public static final double RPM_FAR = 1700; // TODO: shoot from other line too??
 
-      leftShooter.restoreFactoryDefaults();		
-      leftShooter.setInverted(true);
-      leftShooter.setSmartCurrentLimit(40);
+	public static final double ERROR_TOLERANCE = 50;
+	
+	double setpoint;
 
-      shooterPID.setP(0.001);
-      shooterPID.setI(0);
-      shooterPID.setD(0.01);
-      leftShooter.burnFlash();
-  }
+  	/** Creates a new Shooter. */
+	public Shooter() 
+	{
+		rightShooter = new CANSparkMax(Constants.RIGHT_SHOOTER_MOTOR_ID, MotorType.kBrushless);
+		leftShooter = new CANSparkMax(Constants.LEFT_SHOOTER_MOTOR_ID, MotorType.kBrushless);  //  left and right
+		shooterPID = leftShooter.getPIDController();
 
-  @Override
-  public void periodic() 
-  {
-    // This method will be called once per scheduler run
-    //shoot
-    //make more methods?
-    //something controller
-  } 
+		leftShooter.restoreFactoryDefaults();		
+		leftShooter.setInverted(true);
+		leftShooter.setSmartCurrentLimit(40);
 
-  public void shoot()
-  {
-      shooterPID.setReference(RPM_10FTLINE+200, ControlType.kVelocity); // steady state err is 200, but I terms make it VIOLENT
-  }
+		shooterPID.setP(0.001);
+		shooterPID.setI(0);
+		shooterPID.setD(0.01);
+		// shooterPID.setFF(0.15);
+		// shooterPID.setIZone(IZone);
+		leftShooter.burnFlash();
+	}
 
-  public void stop()
-  {
-      shooterPID.setReference(0,ControlType.kVelocity);
-  }
+	@Override
+	public void periodic() 
+	{	
+		SmartDashboard.putNumber("Current Velocity", leftEncoder.getVelocity());
+	} 
+	
+	public void shoot(double setpoint)
+	{
+		this.setpoint = setpoint;
+		shooterPID.setReference(setpoint+200, ControlType.kVelocity); // steady state err is 200, but I terms make it VIOLENT
+		
+		// math goes like:
+		// ff = setpoint * ff_gain
+		// output = pid + ff
+	}
+
+	public void stop()
+	{
+		shooterPID.setReference(0, ControlType.kVelocity);
+	}
+
+	public boolean atSetpoint()
+	{
+		return (leftEncoder.getVelocity() - setpoint) <= ERROR_TOLERANCE;
+	}
 }
