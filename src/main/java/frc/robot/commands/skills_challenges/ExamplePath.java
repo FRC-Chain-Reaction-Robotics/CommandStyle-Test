@@ -5,7 +5,7 @@
 package frc.robot.commands.skills_challenges;
 
 import frc.robot.commands.drive.*;
-import frc.robot.commands.shoot.StartShooter;
+import frc.robot.commands.shoot.StartShooterCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.*;
 
@@ -47,12 +47,12 @@ public class ExamplePath extends SequentialCommandGroup
 			//	In the link up there, they used a lambda instead of a method reference. You can look up what that is, but it's not important here.
 			//	A RunCommand would be used for a simple command that doesn't need its own file.
 
-			new RunCommand(intake::intakeOn, intake),	//	turns the intake on for the entire duration of this command group
+			new RunCommand(intake::on, intake),	//	turns the intake on for the entire duration of this command group
 			new DriveToDistanceCommand(99, dt),
 			new TurnToAngleCommand(99, dt),
 			new TurnToAngleCommand(99, dt),	//	pretend some random galactic search path happens here
 			new TurnToAngleCommand(99, dt),
-			new RunCommand(intake::intakeOff, intake)	//	turn it off at the end for safety
+			new RunCommand(intake::off, intake)	//	turn it off at the end for safety
 		);
 	}
 
@@ -63,9 +63,9 @@ public class ExamplePath extends SequentialCommandGroup
 	{
 		addCommands
 		(
-			new RunCommand(intake::intakeOn, intake),
+			new RunCommand(intake::on, intake),
 			new DriveToDistanceCommand(1, dt),
-			new TurnToAngleCommand(1, dt).alongWith(new StartShooter(Shooter.RPM_10FTLINE, shooter)),
+			new TurnToAngleCommand(1, dt).alongWith(new StartShooterCommand(Shooter.RPM_10FTLINE, shooter)),
 			//	.alongWith(Command) returns a parallel group composed of the turn and shoot commands here, so they will run simultaneously
 			
 			//	this could be useful if, say, you wanted to aim and begin ramping up the slow ass shooter wheel simultaneously
@@ -73,7 +73,7 @@ public class ExamplePath extends SequentialCommandGroup
 			//	You can also use parallel() instead, slightly shorter looking code
 			parallel
 			(
-				new TurnToAngleCommand(1, dt), new StartShooter(Shooter.RPM_10FTLINE, shooter)
+				new TurnToAngleCommand(1, dt), new StartShooterCommand(Shooter.RPM_10FTLINE, shooter)
 			)
 			
 			//	there are more methods than .alongWith(), you can look at that page in line 46 and find out about 

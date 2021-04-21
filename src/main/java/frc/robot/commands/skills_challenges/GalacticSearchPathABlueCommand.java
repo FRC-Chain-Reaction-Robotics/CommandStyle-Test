@@ -16,7 +16,7 @@ public class GalacticSearchPathABlueCommand extends SequentialCommandGroup
 	{
 		addCommands
 		(
-            new RunCommand(intake::intakeOn, intake),   //  you only need the intake business on the galactic search challenges
+            new RunCommand(intake::on, intake),   //  you only need the intake business on the galactic search challenges
             new DriveToDistanceCommand(4.72, dt),
             new TurnToAngleCommand(-72.565, dt),
             new DriveToDistanceCommand(2.41, dt),
@@ -24,7 +24,7 @@ public class GalacticSearchPathABlueCommand extends SequentialCommandGroup
             new DriveToDistanceCommand(1.7, dt),
             new TurnToAngleCommand(-9.31, dt),
             new DriveToDistanceCommand(1.524, dt),
-            new RunCommand(intake::intakeOff, intake)   //  just make sure to end with the intake off 
+            new RunCommand(intake::off, intake)   //  just make sure to end with the intake off 
             //  (technically once the robot is disabled it will turn off automatically BUT good practice)
         );
         

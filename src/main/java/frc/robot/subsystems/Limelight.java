@@ -8,7 +8,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight extends SubsystemBase
 {
-
     // PUBLIC METHODS:
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry tx = table.getEntry("tx");
@@ -20,6 +19,12 @@ public class Limelight extends SubsystemBase
     double y = ty.getDouble(0.0);
     double area = ta.getDouble(0.0);  
     boolean v = tv.getBoolean(false);
+
+    public Limelight()
+    {
+        table.getEntry("ledMode").setNumber(3); //Turn the LED on
+        register();
+    }
 
     //      getTv()
     public boolean getTv(){
@@ -46,17 +51,14 @@ public class Limelight extends SubsystemBase
         x = tx.getDouble(0.0);
         y = ty.getDouble(0.0);
         area = ta.getDouble(0.0);
-        v = tv.getBoolean(false);    
+        v = tv.getBoolean(false);
+        
+        SmartDashboard.putNumber("tx", x);
+        SmartDashboard.putNumber("ty", y);
+        SmartDashboard.putNumber("ta", area);
+        SmartDashboard.putBoolean("tv",v);
     }
 
-    public void shuffleboardUpdate() {
-        SmartDashboard.putNumber("LimelightX", x);
-        SmartDashboard.putNumber("LimelightY", y);
-        SmartDashboard.putNumber("LimelightArea", area);
-        SmartDashboard.putBoolean("LimelightV",v);
-        
-    }
-     
     public void toggleLimelightLED() {
         if(table.getEntry("ledMode").getDouble(1) == 1 ) //Light is off
         {

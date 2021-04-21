@@ -5,6 +5,7 @@
 package frc.robot.commands.shoot;
 
 import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class ShootCommand extends SequentialCommandGroup
@@ -12,7 +13,7 @@ public class ShootCommand extends SequentialCommandGroup
     Shooter shooter;
     Feeder feeder;
 
-    public ShootCommand(Shooter shooter, Feeder feeder)
+    public ShootCommand(double rpm, Shooter shooter, Feeder feeder)
     {
         this.shooter = shooter;
         this.feeder = feeder;
@@ -20,8 +21,10 @@ public class ShootCommand extends SequentialCommandGroup
 
         addCommands
         (
-            new StartShooter(Shooter.RPM_10FTLINE, shooter)
-            
+			new StartShooterCommand(rpm, shooter),
+            new RunCommand(feeder::on, feeder).withTimeout(4),
+            new RunCommand(feeder::off, feeder),
+            new StopShooterCommand(shooter)
         );
     }
 }

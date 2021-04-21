@@ -5,12 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
-import frc.robot.commands.*;
-// import frc.robot.commands.drive.*;
-// import frc.robot.commands.shoot.*;
-import frc.robot.commands.skills_challenges.*;
-import frc.robot.subsystems.*;
+import static edu.wpi.first.wpilibj.GenericHID.Hand.*;
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.button.*;
+import static edu.wpi.first.wpilibj.XboxController.Button.*;
+
+import frc.robot.commands.*;
+import frc.robot.commands.shoot.*;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,36 +23,34 @@ import edu.wpi.first.wpilibj2.command.*;
 public class RobotContainer
 {
   	// The robot's subsystems and commands are defined here...
-
-	// private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-
 	private final Limelight ll = new Limelight();	
-	private final Mecanum dt = new Mecanum(ll);
+	private final Mecanum dt = new Mecanum();
 	private final Shooter shooter = new Shooter();
 	private final Intake intake = new Intake();
 	private final Feeder feeder = new Feeder();
 	
 	XboxController driverController = new XboxController(0);
-
-
-	AutoCommand autoCommand = new AutoCommand(dt, intake, feeder, shooter);
-
+	XboxController operatorController = new XboxController(1);
 	
-  	/** The container for the robot. Contains subsystems, OI devices, and commands. */
-	public RobotContainer() {
-	// Configure the button bindings
-	configureButtonBindings();
-	 // Configure default commands
-	
-	dt.setDefaultCommand(
-		// A split-stick arcade command, with forward/backward controlled by the left
-		// hand, and turning controlled by the right.
-		new RunCommand(
-		() -> dt.drive(
-			driverController.getY(GenericHID.Hand.kLeft),
-			driverController.getX(GenericHID.Hand.kLeft),
-			driverController.getX(GenericHID.Hand.kRight)),
-		dt));
+	/** The container for the robot. Contains subsystems, OI devices, and commands. */
+	public RobotContainer()
+	{
+		// Configure the button bindings
+		configureButtonBindings();
+		
+		// Configure default commands
+		
+		dt.setDefaultCommand(
+			new RunCommand(
+			() -> dt.drive(
+				driverController.getX(kLeft),
+				-driverController.getY(kLeft),
+				driverController.getX(kRight)),
+			dt));
+
+		shooter.setDefaultCommand(new StopShooterCommand(shooter).perpetually());
+		feeder.setDefaultCommand(new RunCommand(feeder::off, feeder));
+		intake.setDefaultCommand(new RunCommand(intake::off, intake));
 	}
 
 	/**
@@ -61,7 +61,33 @@ public class RobotContainer
    */
 	private void configureButtonBindings()
 	{
-	
+		//#region controls
+		var feederUpButton = new POVButton(driverController, 0);
+		var feederDownButton = new POVButton(driverController, 180);
+
+		var intakeButton = new JoystickButton(driverController, kBumperRight.value);
+		var intakeReverseButton = new JoystickButton(driverController, kBumperLeft.value);
+
+		var shootButton = new JoystickButton(driverController, kX.value);
+
+		var slowModeButton = new Trigger(() -> driverController.getTriggerAxis(kLeft) > 0);
+		//#endregion
+
+		//#region bindings
+		feederUpButton.whileHeld(feeder::on, feeder)
+			.or(feederDownButton.whileHeld(feeder::reverse, feeder))
+			.whenInactive(feeder::off, feeder);
+
+		intakeButton.whileHeld(intake::on, intake)
+			.or(intakeReverseButton.whileHeld(intake::reverse, intake))
+			.whenInactive(intake::off, intake);
+
+		shootButton.whenActive(new StartShooterCommand(Shooter.RPM_10FTLINE, shooter))
+					.whenInactive(new StopShooterCommand(shooter));
+		
+		slowModeButton.whenActive(() -> dt.setMaxOutput(Mecanum.SLOW_MODE_SPEED), dt).
+					whenInactive(() -> dt.setMaxOutput(Mecanum.TELEOP_SPEED), dt);
+		//#endregion
 	}
 
 	/**
@@ -71,7 +97,7 @@ public class RobotContainer
    */
 	public Command getAutonomousCommand()
 	{
-		// var auto = new ShootCommand(Shooter.RPM_10FTLINE, shooter);
-		return new GalacticSearchPathARedCommand(dt, intake);
+		return new InfRechAutoCommand(dt, intake, feeder, shooter, ll);
+		// return new AimCommand(dt).andThen(new ShootCommand(Shooter.RPM_10FTLINE, shooter, feeder));
 	}
 }

@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -19,14 +20,21 @@ public class Intake extends SubsystemBase
 	public Intake()
 	{
         rightHopperMotor.follow(leftHopperMotor);
-        intakeMotor.setInverted(false);
+		intakeMotor.setInverted(true);
+		
+		setDefaultCommand(new RunCommand(this::off, this));
+		register();
 	}
 
-	public void intakeOn() {
-		intakeMotor.set(ControlMode.PercentOutput, 1);
+	public void on() {
+		intakeMotor.set(ControlMode.PercentOutput, 0.5);
+	}
+	
+	public void reverse() {
+		intakeMotor.set(ControlMode.PercentOutput, -0.5);
 	}
 
-	public void intakeOff() {
+	public void off() {
 		intakeMotor.set(ControlMode.PercentOutput, 0);
 	}
 }

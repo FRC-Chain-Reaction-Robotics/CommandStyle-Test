@@ -9,6 +9,7 @@ import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants;
+import frc.robot.commands.shoot.StopShooterCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -17,12 +18,12 @@ public class Shooter extends SubsystemBase
 	CANSparkMax rightShooter;
 	CANSparkMax leftShooter;
 	CANPIDController shooterPID;
-	CANEncoder leftEncoder = leftShooter.getEncoder();
+	CANEncoder leftEncoder;
 
 
 	double kP, kI, kD;
 	public static final double RPM_10FTLINE = 1350; 
-	public static final double RPM_FAR = 1700; // TODO: shoot from other line too??
+	public static final double RPM_FAR = 1550;
 
 	public static final double ERROR_TOLERANCE = 50;
 	
@@ -30,10 +31,11 @@ public class Shooter extends SubsystemBase
 
   	/** Creates a new Shooter. */
 	public Shooter() 
-	{
+	{	
 		rightShooter = new CANSparkMax(Constants.RIGHT_SHOOTER_MOTOR_ID, MotorType.kBrushless);
 		leftShooter = new CANSparkMax(Constants.LEFT_SHOOTER_MOTOR_ID, MotorType.kBrushless);  //  left and right
 		shooterPID = leftShooter.getPIDController();
+		leftEncoder = leftShooter.getEncoder();
 
 		leftShooter.restoreFactoryDefaults();		
 		leftShooter.setInverted(true);
@@ -45,12 +47,15 @@ public class Shooter extends SubsystemBase
 		// shooterPID.setFF(0.15);
 		// shooterPID.setIZone(IZone);
 		leftShooter.burnFlash();
+		
+		setDefaultCommand(new StopShooterCommand(this).perpetually());
+		register();
 	}
 
 	@Override
 	public void periodic() 
 	{	
-		SmartDashboard.putNumber("Current Velocity", leftEncoder.getVelocity());
+		SmartDashboard.putNumber("Shooter Velocity", leftEncoder.getVelocity());
 	} 
 	
 	public void shoot(double setpoint)
@@ -70,6 +75,6 @@ public class Shooter extends SubsystemBase
 
 	public boolean atSetpoint()
 	{
-		return (leftEncoder.getVelocity() - setpoint) <= ERROR_TOLERANCE;
+		return Math.abs(leftEncoder.getVelocity() - setpoint) <= ERROR_TOLERANCE;
 	}
 }

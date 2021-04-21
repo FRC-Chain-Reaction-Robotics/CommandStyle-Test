@@ -13,7 +13,7 @@ public class GalacticSearchPathBRedCommand extends SequentialCommandGroup
 	{
 		addCommands
 		(
-            new RunCommand(intake::intakeOn, intake),   //  you only need the intake business on the galactic search challenges
+            new RunCommand(intake::on, intake),   //  you only need the intake business on the galactic search challenges
             new DriveToDistanceCommand(1.524, dt),
             new TurnToAngleCommand(45, dt),
             new DriveToDistanceCommand(2.155, dt),
@@ -21,7 +21,7 @@ public class GalacticSearchPathBRedCommand extends SequentialCommandGroup
             new DriveToDistanceCommand(2.155, dt),
             new TurnToAngleCommand(45, dt),
             new DriveToDistanceCommand(2.268, dt),
-            new RunCommand(intake::intakeOff, intake)   
+            new RunCommand(intake::off, intake)   
             
         );
         

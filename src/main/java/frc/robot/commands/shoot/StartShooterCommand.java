@@ -8,12 +8,12 @@ import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class StartShooter extends CommandBase
+public class StartShooterCommand extends CommandBase
 {
     Shooter shooter;
     double RPM;
 
-    public StartShooter(double RPM, Shooter shooter)
+    public StartShooterCommand(double RPM, Shooter shooter)
     {
         this.shooter = shooter;
         this.RPM = RPM;
