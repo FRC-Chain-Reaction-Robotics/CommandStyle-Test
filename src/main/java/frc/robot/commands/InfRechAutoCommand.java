@@ -24,23 +24,26 @@ public class InfRechAutoCommand extends SequentialCommandGroup
 		addRequirements(dt, intake, feeder, shooter);
 		addCommands
 		(
-			new RunCommand(() -> dt.setMaxOutput(Mecanum.AUTON_SPEED), dt),
-			//	Shoots the three preloaded balls
+			new RunCommand(() -> dt.setMaxOutput(Mecanum.AUTON_SPEED), dt).withTimeout(0.02),
+			// //	Shoots the three preloaded balls
 			new AimCommand(dt, ll),
-			new ShootCommand(Shooter.RPM_10FTLINE, shooter, feeder),
+			//new ShootCommand(Shooter.RPM_10FTLINE, shooter, feeder),
 			//	Moves to the control panel area (for more ballz)
 			new TurnToAngleCommand(130.0, dt),
 			new DriveToDistanceCommand(1.652, dt),
 			new TurnToAngleCommand(50, dt),
 			new DriveToDistanceCommand(3.799, dt),
-			new RunCommand(intake::on, intake),
+			new RunCommand(intake::on, intake).withTimeout(4),
 			//	Drive back to goal
 			new TurnToAngleCommand(140.0, dt),
-			new DriveToDistanceCommand(2.277, dt),
+			//	Start winding up shooter early
+			new DriveToDistanceCommand(2.277, dt).alongWith(new StartShooterCommand(Shooter.RPM_FAR, shooter)),
 			new TurnToAngleCommand(40.0, dt),
 			//	Shoot the balls we've picked up
 			new AimCommand(dt, ll),
-			new ShootCommand(Shooter.RPM_FAR, shooter, feeder)
+            new RunCommand(feeder::on, feeder).withTimeout(4),
+            new RunCommand(feeder::off, feeder),
+            new StopShooterCommand(shooter)
 		);
 	}
 }

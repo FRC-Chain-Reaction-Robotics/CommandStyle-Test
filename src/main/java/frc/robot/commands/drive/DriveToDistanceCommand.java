@@ -18,7 +18,7 @@ public class DriveToDistanceCommand extends PIDCommand
 
         this.dt = dt;
 
-        getController().setTolerance(0.01);
+        getController().setTolerance(0.1);
 
         addRequirements(dt);
     }

@@ -11,32 +11,31 @@ import static edu.wpi.first.wpilibj.SPI.Port.kOnboardCS0;
 // import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.*;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 public class Mecanum extends SubsystemBase
 {
-	CANSparkMax lf = new CANSparkMax(Constants.LF_MOTOR_ID, kBrushless);
-	CANSparkMax lb = new CANSparkMax(Constants.LB_MOTOR_ID, kBrushless);
-	CANSparkMax rf = new CANSparkMax(Constants.RF_MOTOR_ID, kBrushless);
-	CANSparkMax rb = new CANSparkMax(Constants.RB_MOTOR_ID, kBrushless);
+	protected CANSparkMax lf = new CANSparkMax(Constants.LF_MOTOR_ID, kBrushless);
+	protected CANSparkMax lb = new CANSparkMax(Constants.LB_MOTOR_ID, kBrushless);
+	protected CANSparkMax rf = new CANSparkMax(Constants.RF_MOTOR_ID, kBrushless);
+	protected CANSparkMax rb = new CANSparkMax(Constants.RB_MOTOR_ID, kBrushless);
 	
-    CANEncoder m_leftFrontEncoder = lf.getEncoder();
-    CANEncoder m_leftBackEncoder = lb.getEncoder();
-    CANEncoder m_rightFrontEncoder = rf.getEncoder();
-    CANEncoder m_rightBackEncoder = rb.getEncoder();
+    protected CANEncoder lfEncoder = lf.getEncoder();
+    protected CANEncoder lbEncoder = lb.getEncoder();
+    protected CANEncoder rfEncoder = rf.getEncoder();
+    protected CANEncoder rbEncoder = rb.getEncoder();
     
-	Gyro gyro = new ADXRS450_Gyro(kOnboardCS0);
+	protected Gyro gyro = new ADXRS450_Gyro(kOnboardCS0);
 	// AHRS gyro = new AHRS();
 
 	MecanumDrive md = new MecanumDrive(lf, lb, rf, rb);
 
-	public static final double SLOW_MODE_SPEED = 0.15;
-	public static final double AUTON_SPEED = 0.5;
+	public static final double SLOW_MODE_SPEED = 0.25;
+	public static final double AUTON_SPEED = 0.3;
 	public static final double TELEOP_SPEED = 0.5;
 
 	/** Creates a new ExampleSubsystem. */
@@ -47,11 +46,11 @@ public class Mecanum extends SubsystemBase
         gyro.reset();
         gyro.calibrate();
         
-        m_rightFrontEncoder.setPositionConversionFactor(0.0454);
-        m_rightBackEncoder.setPositionConversionFactor(0.0454);
-        m_leftFrontEncoder.setPositionConversionFactor(0.0454);
-        m_leftBackEncoder.setPositionConversionFactor(0.0454);
-
+        rfEncoder.setPositionConversionFactor(0.0454);
+        rbEncoder.setPositionConversionFactor(0.0454);
+        lfEncoder.setPositionConversionFactor(0.0454);
+		lbEncoder.setPositionConversionFactor(0.0454);
+		
         rf.setInverted(true);
 
 		lb.setIdleMode(kCoast);
@@ -64,26 +63,18 @@ public class Mecanum extends SubsystemBase
 		rf.burnFlash();
 		rb.burnFlash();
 
-
 		//#region shuffleboard
-		var drivetrainTab = Shuffleboard.getTab("Drivetrain");
+		SmartDashboard.putData((Sendable) gyro);
 
-		// display gyro
-		drivetrainTab.add((Sendable) gyro);
-		
-		// display encoders
-		var encoderGrid = drivetrainTab.getLayout("Encoders", BuiltInLayouts.kGrid)
-			.withSize(2, 4);
+		SmartDashboard.putNumber("lf position", lfEncoder.getPosition());
+		SmartDashboard.putNumber("rf position", rfEncoder.getPosition());
+		SmartDashboard.putNumber("lb position", lbEncoder.getPosition());
+		SmartDashboard.putNumber("rb position", rbEncoder.getPosition());
 
-		encoderGrid.addNumber("lf position", m_leftFrontEncoder::getPosition);
-		encoderGrid.addNumber("rf position", m_rightFrontEncoder::getPosition);
-		encoderGrid.addNumber("lb position", m_leftBackEncoder::getPosition);
-		encoderGrid.addNumber("rb position", m_rightBackEncoder::getPosition);
-
-		encoderGrid.addNumber("rb Velocity", m_rightBackEncoder::getVelocity);
-		encoderGrid.addNumber("lb Velocity", m_leftBackEncoder::getVelocity);
-		encoderGrid.addNumber("lf Velocity", m_leftFrontEncoder::getVelocity);
-		encoderGrid.addNumber("rf Velocity", m_rightFrontEncoder::getVelocity);
+		SmartDashboard.putNumber("rb Velocity", rbEncoder.getVelocity());
+		SmartDashboard.putNumber("lb Velocity", lbEncoder.getVelocity());
+		SmartDashboard.putNumber("lf Velocity", lfEncoder.getVelocity());
+		SmartDashboard.putNumber("rf Velocity", rfEncoder.getVelocity());
 		//#endregion
 	}
 
@@ -95,8 +86,7 @@ public class Mecanum extends SubsystemBase
    *
    * @param ySpeed The robot's speed along the Y axis [-1.0..1.0]. Right is positive.
    * @param xSpeed The robot's speed along the X axis [-1.0..1.0]. Forward is positive.
-   * @param zRotation The robot's rotation rate around the Z axis [-1.0..1.0]. Clockwise is
-   *     positive.
+   * @param zRotation The robot's rotation rate around the Z axis [-1.0..1.0]. Clockwise is positive.
    */
 	public void drive(double ySpeed, double xSpeed, double zRotation)
 	{
@@ -106,15 +96,15 @@ public class Mecanum extends SubsystemBase
 	public void resetSensors()
     {
         gyro.reset();
-        m_leftBackEncoder.setPosition(0);
-        m_rightBackEncoder.setPosition(0);
-        m_leftFrontEncoder.setPosition(0);
-        m_rightFrontEncoder.setPosition(0);
+        lbEncoder.setPosition(0);
+        rbEncoder.setPosition(0);
+        lfEncoder.setPosition(0);
+        rfEncoder.setPosition(0);
 	}
 
 	public double getDistance()
 	{
-		return m_leftFrontEncoder.getPosition();
+		return lfEncoder.getPosition();
 	}
 
 	public double getAngle()

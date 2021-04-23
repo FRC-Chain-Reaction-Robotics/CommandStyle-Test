@@ -25,7 +25,7 @@ public class Shooter extends SubsystemBase
 	public static final double RPM_10FTLINE = 1350; 
 	public static final double RPM_FAR = 1550;
 
-	public static final double ERROR_TOLERANCE = 50;
+	public static final double ERROR_TOLERANCE = 100;
 	
 	double setpoint;
 
@@ -76,5 +76,10 @@ public class Shooter extends SubsystemBase
 	public boolean atSetpoint()
 	{
 		return Math.abs(leftEncoder.getVelocity() - setpoint) <= ERROR_TOLERANCE;
+	}
+	
+	public boolean atSetpoint(double setpointToCheck)
+	{
+		return Math.abs(leftEncoder.getVelocity() - setpointToCheck) <= ERROR_TOLERANCE;
 	}
 }

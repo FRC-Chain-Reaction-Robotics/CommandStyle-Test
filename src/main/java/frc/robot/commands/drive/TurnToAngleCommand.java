@@ -10,7 +10,6 @@ public class TurnToAngleCommand extends PIDCommand
 
     public TurnToAngleCommand(double targetAngleDegrees, Mecanum dt)
     {
-        // super(new PIDController(0.09, 0.22, 0),
         super(new PIDController(0.05, 0, 0),
             dt::getAngle,
             targetAngleDegrees,
@@ -19,7 +18,7 @@ public class TurnToAngleCommand extends PIDCommand
 
         this.dt = dt;
         
-        getController().setTolerance(0.2);
+        getController().setTolerance(1);
 
         addRequirements(dt);
     }

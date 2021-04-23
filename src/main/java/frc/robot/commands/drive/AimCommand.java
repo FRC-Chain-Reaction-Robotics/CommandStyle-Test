@@ -18,7 +18,7 @@ public class AimCommand extends PIDCommand
 
         this.dt = dt;
         
-        getController().setTolerance(0.2);
+        getController().setTolerance(1);
 
         addRequirements(dt);
     }

@@ -5,14 +5,18 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+
 import static edu.wpi.first.wpilibj.GenericHID.Hand.*;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.*;
 import static edu.wpi.first.wpilibj.XboxController.Button.*;
 
 import frc.robot.commands.*;
+import frc.robot.commands.drive.AimCommand;
 import frc.robot.commands.shoot.*;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Lights.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,11 +27,14 @@ import frc.robot.subsystems.*;
 public class RobotContainer
 {
   	// The robot's subsystems and commands are defined here...
-	private final Limelight ll = new Limelight();	
-	private final Mecanum dt = new Mecanum();
-	private final Shooter shooter = new Shooter();
-	private final Intake intake = new Intake();
-	private final Feeder feeder = new Feeder();
+	Limelight ll = new Limelight();	
+	Mecanum dt = new Mecanum();
+	Shooter shooter = new Shooter();
+	Intake intake = new Intake();
+	Feeder feeder = new Feeder();
+	PDP pdp = new PDP();
+	Lightz2Controller lightzController = new Lightz2Controller(shooter, feeder, dt, ll);
+	Lightz lightz = new Lightz();
 	
 	XboxController driverController = new XboxController(0);
 	XboxController operatorController = new XboxController(1);
@@ -51,6 +58,11 @@ public class RobotContainer
 		shooter.setDefaultCommand(new StopShooterCommand(shooter).perpetually());
 		feeder.setDefaultCommand(new RunCommand(feeder::off, feeder));
 		intake.setDefaultCommand(new RunCommand(intake::off, intake));
+		
+		lightzController.setDefaultCommand(new RunCommand(
+			() -> lightzController.updateMode(
+					operatorController.getXButton(), 
+					driverController.getBumper(kRight)), lightzController));
 	}
 
 	/**
@@ -61,32 +73,53 @@ public class RobotContainer
    */
 	private void configureButtonBindings()
 	{
+		//#region rumble commands
+		var rumbleOnCommand = new RunCommand(() -> operatorController.setRumble(RumbleType.kLeftRumble, 1.0))
+			.alongWith(new RunCommand(() -> operatorController.setRumble(RumbleType.kRightRumble, 1.0)))
+			.alongWith(new RunCommand(() -> driverController.setRumble(RumbleType.kLeftRumble, 1.0)))
+			.alongWith(new RunCommand(() -> driverController.setRumble(RumbleType.kRightRumble, 1.0)));
+			
+		var rumbleOffCommand = new RunCommand(() -> operatorController.setRumble(RumbleType.kLeftRumble, 0.0))
+			.alongWith(new RunCommand(() -> operatorController.setRumble(RumbleType.kRightRumble, 0.0)))
+			.alongWith(new RunCommand(() -> driverController.setRumble(RumbleType.kLeftRumble, 0.0)))
+			.alongWith(new RunCommand(() -> driverController.setRumble(RumbleType.kRightRumble, 0.0)));
+		//#endregion
+
 		//#region controls
-		var feederUpButton = new POVButton(driverController, 0);
-		var feederDownButton = new POVButton(driverController, 180);
+		var feederUpButton = new POVButton(operatorController, 0).or(new POVButton(driverController, 0));
+		var feederDownButton = new POVButton(operatorController, 180).or(new POVButton(driverController, 180));
 
-		var intakeButton = new JoystickButton(driverController, kBumperRight.value);
-		var intakeReverseButton = new JoystickButton(driverController, kBumperLeft.value);
+		var intakeButton = new JoystickButton(operatorController, kBumperRight.value);
+		var intakeReverseButton = new JoystickButton(operatorController, kBumperLeft.value);
 
-		var shootButton = new JoystickButton(driverController, kX.value);
+		var shootButton = new JoystickButton(operatorController, kX.value);
 
-		var slowModeButton = new Trigger(() -> driverController.getTriggerAxis(kLeft) > 0);
+		var slowModeButton = new JoystickButton(driverController, kBumperLeft.value);
+		var aimButton = new JoystickButton(driverController, kBumperRight.value);
 		//#endregion
 
 		//#region bindings
-		feederUpButton.whileHeld(feeder::on, feeder)
-			.or(feederDownButton.whileHeld(feeder::reverse, feeder))
-			.whenInactive(feeder::off, feeder);
+		feederUpButton.whileActiveContinuous(new RunCommand(feeder::on, feeder))
+			.or(feederDownButton.whileActiveContinuous(new RunCommand(feeder::reverse, feeder))
+			.whenInactive(new RunCommand(feeder::off, feeder)));
 
-		intakeButton.whileHeld(intake::on, intake)
-			.or(intakeReverseButton.whileHeld(intake::reverse, intake))
-			.whenInactive(intake::off, intake);
+		intakeButton.whileHeld(new RunCommand(intake::on, intake))
+			.or(intakeReverseButton.whileHeld(new RunCommand(intake::reverse, intake)))
+			.whenInactive(new RunCommand(intake::off, intake));
 
-		shootButton.whenActive(new StartShooterCommand(Shooter.RPM_10FTLINE, shooter))
-					.whenInactive(new StopShooterCommand(shooter));
-		
-		slowModeButton.whenActive(() -> dt.setMaxOutput(Mecanum.SLOW_MODE_SPEED), dt).
-					whenInactive(() -> dt.setMaxOutput(Mecanum.TELEOP_SPEED), dt);
+		shootButton.whileHeld(new StartShooterCommand(Shooter.RPM_10FTLINE, shooter).alongWith(rumbleOnCommand))
+					.whenInactive(new StopShooterCommand(shooter).alongWith(rumbleOffCommand));
+
+		slowModeButton.whenActive(new RunCommand(() -> dt.setMaxOutput(Mecanum.SLOW_MODE_SPEED), dt))
+					.whenInactive(new RunCommand(() -> dt.setMaxOutput(Mecanum.TELEOP_SPEED), dt));
+
+		aimButton.whileHeld(new AimCommand(dt, ll))
+					.whenInactive(new RunCommand(
+						() -> dt.drive(
+							driverController.getX(kLeft),
+							-driverController.getY(kLeft),
+							driverController.getX(kRight)),
+						dt));
 		//#endregion
 	}
 
@@ -98,6 +131,6 @@ public class RobotContainer
 	public Command getAutonomousCommand()
 	{
 		return new InfRechAutoCommand(dt, intake, feeder, shooter, ll);
-		// return new AimCommand(dt).andThen(new ShootCommand(Shooter.RPM_10FTLINE, shooter, feeder));
+		// return new AimCommand(dt, ll).andThen(new ShootCommand(Shooter.RPM_10FTLINE, shooter, feeder));
 	}
 }
