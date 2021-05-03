@@ -23,12 +23,12 @@ public class Feeder extends SubsystemBase
 
     public void on() 
     {
-        feedMotor.set(ControlMode.PercentOutput, 0.5);
+        feedMotor.set(ControlMode.PercentOutput, 0.3);
     }
     
     public void reverse() 
     {
-        feedMotor.set(ControlMode.PercentOutput, -0.5);
+        feedMotor.set(ControlMode.PercentOutput, -0.3);
     }
 
     public void off()

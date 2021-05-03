@@ -43,8 +43,8 @@ public class Mecanum extends SubsystemBase
 	{
 		md.setMaxOutput(TELEOP_SPEED); // spitfire
 
-        gyro.reset();
-        gyro.calibrate();
+		resetGyro();
+		resetEncoders();
         
         rfEncoder.setPositionConversionFactor(0.0454);
         rbEncoder.setPositionConversionFactor(0.0454);
@@ -93,9 +93,20 @@ public class Mecanum extends SubsystemBase
 		md.driveCartesian(ySpeed, xSpeed, zRotation);
 	}
 
-	public void resetSensors()
+	public void drive(double ySpeed, double xSpeed, double zRotation, double maxOutput)
+	{
+		md.setMaxOutput(maxOutput);
+		drive(ySpeed, xSpeed, zRotation);
+	}
+
+	public void resetGyro()
+	{
+		gyro.reset();
+		gyro.calibrate();
+	}
+
+	public void resetEncoders()
     {
-        gyro.reset();
         lbEncoder.setPosition(0);
         rbEncoder.setPosition(0);
         lfEncoder.setPosition(0);

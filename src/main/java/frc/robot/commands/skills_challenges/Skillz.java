@@ -41,7 +41,7 @@ public class Skillz
 	{
         pathSelection.run();
 
-        dt.resetSensors();
+        dt.resetEncoders();
         
         step = 0;
     }
@@ -56,7 +56,7 @@ public class Skillz
         if (currentActionCompleted && step < auton.length-1)
         {
             step++;
-            dt.resetSensors();
+            dt.resetEncoders();
         }
         
         String nameCurAction = (currentAction == drive) ? "drive" : "turn";

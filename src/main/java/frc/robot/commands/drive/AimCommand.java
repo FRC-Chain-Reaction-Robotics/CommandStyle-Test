@@ -26,7 +26,7 @@ public class AimCommand extends PIDCommand
     @Override
     public void initialize()
     {
-        dt.resetSensors();
+        dt.resetEncoders();
     }
 
     @Override

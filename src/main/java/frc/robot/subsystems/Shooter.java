@@ -25,7 +25,7 @@ public class Shooter extends SubsystemBase
 	public static final double RPM_10FTLINE = 1350; 
 	public static final double RPM_FAR = 1550;
 
-	public static final double ERROR_TOLERANCE = 100;
+	public static final double ERROR_TOLERANCE = 200;
 	
 	double setpoint;
 
@@ -37,6 +37,7 @@ public class Shooter extends SubsystemBase
 		shooterPID = leftShooter.getPIDController();
 		leftEncoder = leftShooter.getEncoder();
 
+		rightShooter.follow(leftShooter);
 		leftShooter.restoreFactoryDefaults();		
 		leftShooter.setInverted(true);
 		leftShooter.setSmartCurrentLimit(40);
@@ -70,6 +71,7 @@ public class Shooter extends SubsystemBase
 
 	public void stop()
 	{
+		this.setpoint = 0;
 		shooterPID.setReference(0, ControlType.kVelocity);
 	}
 

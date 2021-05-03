@@ -23,7 +23,7 @@ public class ShootCommand extends SequentialCommandGroup
         (
 			new StartShooterCommand(rpm, shooter),
             new RunCommand(feeder::on, feeder).withTimeout(4),
-            new RunCommand(feeder::off, feeder),
+            new RunCommand(feeder::off, feeder).withTimeout(0.02),
             new StopShooterCommand(shooter)
         );
     }

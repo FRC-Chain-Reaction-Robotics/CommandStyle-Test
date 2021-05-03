@@ -26,7 +26,7 @@ public class TurnToAngleCommand extends PIDCommand
     @Override
     public void initialize()
     {
-        dt.resetSensors();
+        dt.resetGyro();
     }
 
     @Override
