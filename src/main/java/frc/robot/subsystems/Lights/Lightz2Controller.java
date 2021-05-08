@@ -37,4 +37,9 @@ public class Lightz2Controller extends SubsystemBase
 			lightz.mode = Lightz2.Mode.kBlue;
 
 	}
+
+	public void disabled()
+	{
+		lightz.mode = Lightz2.Mode.kPlano;
+	}
 }

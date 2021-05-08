@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.*;
 import static edu.wpi.first.wpilibj.XboxController.Button.*;
 
 import frc.robot.commands.*;
-import frc.robot.commands.drive.AimCommand;
+import frc.robot.commands.drive.*;
 import frc.robot.commands.shoot.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Lights.*;
@@ -28,7 +28,7 @@ import frc.robot.subsystems.trajectorytesting.*;
 public class RobotContainer
 {
   	// The robot's subsystems and commands are defined here...
-	Limelight ll = new Limelight();	
+	Limelight ll = new Limelight();
 	MecanumTraj dt = new MecanumTraj();
 	Shooter shooter = new Shooter();
 	Intake intake = new Intake();
@@ -43,6 +43,7 @@ public class RobotContainer
 	/** The container for the robot. Contains subsystems, OI devices, and commands. */
 	public RobotContainer()
 	{
+		dt.register();
 		//#region some short commands
 		var rumbleOnCommand = new RunCommand(() -> operatorController.setRumble(RumbleType.kLeftRumble, 1.0))
 			.alongWith(new RunCommand(() -> operatorController.setRumble(RumbleType.kRightRumble, 1.0)))
@@ -72,7 +73,7 @@ public class RobotContainer
 		var shootButton = new JoystickButton(operatorController, kX.value);
 		
 		var slowModeButton = new JoystickButton(driverController, kBumperLeft.value).or(new JoystickButton(flightStick, Saitek.SButtons.kUR.ordinal()));
-		var aimButton = new JoystickButton(driverController, kBumperRight.value).or(new JoystickButton(operatorController, Saitek.SButtons.kUL.ordinal()));
+		var aimButton = new JoystickButton(driverController, kBumperRight.value).or(new JoystickButton(flightStick, Saitek.SButtons.kUL.ordinal()));
 		//#endregion
 
 
@@ -85,7 +86,7 @@ public class RobotContainer
 			.or(intakeReverseButton.whileHeld(new RunCommand(intake::reverse, intake)))
 			.whenInactive(new RunCommand(intake::off, intake));
 
-		shootButton.whileHeld(new ShootCommand(Shooter.RPM_10FTLINE, shooter, feeder).alongWith(rumbleOnCommand))
+		shootButton.whileHeld(new ShootCommand(() -> shooter.calcRPM(ll.getTy()), shooter, feeder).alongWith(rumbleOnCommand))
 					.whenInactive(new StopShooterCommand(shooter).alongWith(rumbleOffCommand));
 
 		slowModeButton.whenActive(new RunCommand(() -> dt.setMaxOutput(Mecanum.SLOW_MODE_SPEED), dt).withTimeout(0.02))
@@ -96,7 +97,7 @@ public class RobotContainer
 		//#endregion
 		
 		
-		//#region Configure default commands	
+		//#region Configure default commands
 		dt.setDefaultCommand(driveCommand);
 
 		shooter.setDefaultCommand(new StopShooterCommand(shooter).perpetually());
@@ -116,8 +117,8 @@ public class RobotContainer
 	public Command getAutonomousCommand()
 	{
 		// return new InfRechAutoCommand(dt, intake, feeder, shooter, ll);
-		// return new SetWheelSpeedsTest(dt).withTimeout(0.5);
-		return new FollowTrajCommand(dt);
+		return new SetWheelSpeedsTest(dt);
+		// return new FollowTrajCommand(dt);
 	}
 
 	public void disabledInit()
@@ -125,5 +126,6 @@ public class RobotContainer
 		dt.resetEncoders();
 		dt.resetGyro();
 		dt.resetPose();
+		lightzController.disabled();
 	}
 }

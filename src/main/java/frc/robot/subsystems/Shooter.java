@@ -22,8 +22,8 @@ public class Shooter extends SubsystemBase
 
 
 	double kP, kI, kD;
-	public static final double RPM_10FTLINE = 1350; 
-	public static final double RPM_FAR = 1550;
+	public static final double RPM_10FTLINE = 1530; 
+	public static final double RPM_18FT = 1550;
 
 	public static final double ERROR_TOLERANCE = 200;
 	
@@ -84,4 +84,9 @@ public class Shooter extends SubsystemBase
 	{
 		return Math.abs(leftEncoder.getVelocity() - setpointToCheck) <= ERROR_TOLERANCE;
 	}
+
+	public double calcRPM(double tY) 
+    {
+		return 1940.435 - 30.356*tY;
+    }
 }

@@ -20,17 +20,25 @@ public class MecanumTraj extends MecanumOdom
         super();
         
         //  TODO: tune
-        setPID(lf, 0.35, 0, 0);
-        setPID(rf, 0.35, 0, 0);
-        setPID(rb, 0.35, 0, 0);
-        setPID(lb, 0.35, 0, 0);
+        double kP = 0.0/16, kI = 0.0/16, kD = 0.0/16;
+        double kFF = 3.0/32;
+
+        setAllPID(kP, kI, kD, kFF);
     }
 
-    private void setPID(CANSparkMax motorController, double P, double I, double D)
+    private void setAllPID(double P, double I, double D, double F)
+    {
+        setPID(lf, P, I, D, F);
+        setPID(rf, P, I, D, F);
+        setPID(rb, P, I, D, F);
+        setPID(lb, P, I, D, F);
+    }
+    private void setPID(CANSparkMax motorController, double P, double I, double D, double F)
     {
         motorController.getPIDController().setP(P);
         motorController.getPIDController().setI(I);
         motorController.getPIDController().setD(D);
+        motorController.getPIDController().setFF(F);
         
         motorController.burnFlash();
     }

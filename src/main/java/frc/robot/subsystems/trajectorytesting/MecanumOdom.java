@@ -18,11 +18,11 @@ public class MecanumOdom extends Mecanum
     public MecanumOdom()
     {
         super();
-        
-        rfEncoder.setVelocityConversionFactor(1/1);  //  RPM to m/s
-        rbEncoder.setVelocityConversionFactor(1/1);
-        lfEncoder.setVelocityConversionFactor(1/1);
-		lbEncoder.setVelocityConversionFactor(1/1);   //  1330);  //  TODO: tune
+
+        rfEncoder.setVelocityConversionFactor(1.0/1900);  //  RPM to m/s
+        rbEncoder.setVelocityConversionFactor(1.0/1900);
+        lfEncoder.setVelocityConversionFactor(1.0/1900);
+        lbEncoder.setVelocityConversionFactor(1.0/1900);
         
         rf.burnFlash();
         rb.burnFlash();
@@ -49,7 +49,7 @@ public class MecanumOdom extends Mecanum
 
     private Rotation2d getGyroAsRotation2d()
     {
-        return new Rotation2d(Math.toRadians(-gyro.getAngle()));
+        return Rotation2d.fromDegrees(-gyro.getAngle());
     }
 
     public Pose2d getPose()
@@ -60,6 +60,9 @@ public class MecanumOdom extends Mecanum
     public void resetPose()
     {
         odom.resetPosition(new Pose2d(), new Rotation2d(0));
+
+        resetEncoders();
+        resetGyro();
     }
 
     public void printOdom()

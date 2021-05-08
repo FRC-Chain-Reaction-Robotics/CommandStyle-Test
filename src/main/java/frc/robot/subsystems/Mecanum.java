@@ -42,6 +42,7 @@ public class Mecanum extends SubsystemBase
 	public Mecanum()
 	{
 		md.setMaxOutput(TELEOP_SPEED); // spitfire
+		md.setDeadband(0.05);
 
 		resetGyro();
 		resetEncoders();
@@ -63,19 +64,7 @@ public class Mecanum extends SubsystemBase
 		rf.burnFlash();
 		rb.burnFlash();
 
-		//#region shuffleboard
 		SmartDashboard.putData((Sendable) gyro);
-
-		SmartDashboard.putNumber("lf position", lfEncoder.getPosition());
-		SmartDashboard.putNumber("rf position", rfEncoder.getPosition());
-		SmartDashboard.putNumber("lb position", lbEncoder.getPosition());
-		SmartDashboard.putNumber("rb position", rbEncoder.getPosition());
-
-		SmartDashboard.putNumber("rb Velocity", rbEncoder.getVelocity());
-		SmartDashboard.putNumber("lb Velocity", lbEncoder.getVelocity());
-		SmartDashboard.putNumber("lf Velocity", lfEncoder.getVelocity());
-		SmartDashboard.putNumber("rf Velocity", rfEncoder.getVelocity());
-		//#endregion
 	}
 
 	/**
@@ -126,5 +115,19 @@ public class Mecanum extends SubsystemBase
 	public void setMaxOutput(double maxOutput)
 	{
 		md.setMaxOutput(maxOutput);
+	}
+
+	@Override
+	public void periodic()
+	{
+		SmartDashboard.putNumber("lf position", lfEncoder.getPosition());
+		SmartDashboard.putNumber("rf position", rfEncoder.getPosition());
+		SmartDashboard.putNumber("lb position", lbEncoder.getPosition());
+		SmartDashboard.putNumber("rb position", rbEncoder.getPosition());
+
+		SmartDashboard.putNumber("rb Velocity", rbEncoder.getVelocity());
+		SmartDashboard.putNumber("lb Velocity", lbEncoder.getVelocity());
+		SmartDashboard.putNumber("lf Velocity", lfEncoder.getVelocity());
+		SmartDashboard.putNumber("rf Velocity", rfEncoder.getVelocity());
 	}
 }

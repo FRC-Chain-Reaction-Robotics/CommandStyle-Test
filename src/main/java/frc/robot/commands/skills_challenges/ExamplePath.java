@@ -65,7 +65,7 @@ public class ExamplePath extends SequentialCommandGroup
 		(
 			new RunCommand(intake::on, intake),
 			new DriveToDistanceCommand(1, dt),
-			new TurnToAngleCommand(1, dt).alongWith(new StartShooterCommand(Shooter.RPM_10FTLINE, shooter)),
+			new TurnToAngleCommand(1, dt).alongWith(new StartShooterCommand(() -> Shooter.RPM_10FTLINE, shooter)),
 			//	.alongWith(Command) returns a parallel group composed of the turn and shoot commands here, so they will run simultaneously
 			
 			//	this could be useful if, say, you wanted to aim and begin ramping up the slow ass shooter wheel simultaneously
@@ -73,7 +73,7 @@ public class ExamplePath extends SequentialCommandGroup
 			//	You can also use parallel() instead, slightly shorter looking code
 			parallel
 			(
-				new TurnToAngleCommand(1, dt), new StartShooterCommand(Shooter.RPM_10FTLINE, shooter)
+				new TurnToAngleCommand(1, dt), new StartShooterCommand(() -> Shooter.RPM_10FTLINE, shooter)
 			)
 			
 			//	there are more methods than .alongWith(), you can look at that page in line 46 and find out about 

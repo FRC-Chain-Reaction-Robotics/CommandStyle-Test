@@ -1,0 +1,20 @@
+
+
+() -> System.out.println("Hello")
+
+--- same as ---
+
+public void printHello()
+{
+    System.out.println("Hello");
+}
+
+public (access modifier)
+void (return type)
+printHello (name of the method)
+        () (specifies that it's a method, and has no parameters)
+{}  (declares the body of the method)
+
+
+new RunCommand(this::printHello);
+new RunCommand(() -> System.out.println("Hello"));

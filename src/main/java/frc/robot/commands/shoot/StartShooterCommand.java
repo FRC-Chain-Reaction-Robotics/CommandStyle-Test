@@ -4,19 +4,23 @@
 
 package frc.robot.commands.shoot;
 
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class StartShooterCommand extends CommandBase
 {
     Shooter shooter;
-    double RPM;
+    DoubleSupplier RPMGetter;
 
-    public StartShooterCommand(double RPM, Shooter shooter)
+    public StartShooterCommand(DoubleSupplier rpmGetter, Shooter shooter)
     {
         this.shooter = shooter;
-        this.RPM = RPM;
+        this.RPMGetter = rpmGetter;
 		addRequirements(shooter);
 	}
 
@@ -24,12 +28,12 @@ public class StartShooterCommand extends CommandBase
 	@Override
     public void execute()
     {
-        shooter.shoot(RPM);
+        shooter.shoot(RPMGetter.getAsDouble());
     }
 
 	@Override
     public boolean isFinished()
     {
         return shooter.atSetpoint();
-	}
+    }
 }
