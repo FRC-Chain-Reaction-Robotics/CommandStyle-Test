@@ -70,9 +70,11 @@ public class RobotContainer
 		var intakeReverseButton = new JoystickButton(operatorController, kBumperLeft.value);
 
 		var shootButton = new JoystickButton(operatorController, kX.value);
+		var shootReverseButton = new JoystickButton(operatorController, kY.value);
 		
 		var slowModeButton = new JoystickButton(driverController, kBumperLeft.value).or(new JoystickButton(flightStick, Saitek.SButtons.kUR.ordinal()));
 		var aimButton = new JoystickButton(driverController, kBumperRight.value).or(new JoystickButton(flightStick, Saitek.SButtons.kUL.ordinal()));
+
 		//#endregion
 
 
@@ -86,6 +88,7 @@ public class RobotContainer
 			.whenInactive(new RunCommand(intake::off, intake));
 
 		shootButton.whileHeld(new ShootCommand(() -> shooter.calcRPM(ll.getTy()), shooter, feeder).alongWith(rumbleOnCommand))
+		.or(shootReverseButton.whenActive(new RunCommand(shooter::reverse, shooter)))
 					.whenInactive(new StopShooterCommand(shooter).alongWith(rumbleOffCommand));
 
 		slowModeButton.whenActive(new InstantCommand(() -> dt.setMaxOutput(Mecanum.SLOW_MODE_SPEED), dt))

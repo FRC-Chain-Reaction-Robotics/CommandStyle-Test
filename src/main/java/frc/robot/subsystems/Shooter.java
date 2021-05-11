@@ -40,6 +40,7 @@ public class Shooter extends SubsystemBase
 		rightShooter.follow(leftShooter);
 		leftShooter.restoreFactoryDefaults();		
 		leftShooter.setInverted(true);
+		
 		leftShooter.setSmartCurrentLimit(40);
 
 		shooterPID.setP(0.001);
@@ -68,7 +69,10 @@ public class Shooter extends SubsystemBase
 		// ff = setpoint * ff_gain
 		// output = pid + ff
 	}
-
+	public void reverse()
+    {
+        shoot(-1500);
+    }
 	public void stop()
 	{
 		this.setpoint = 0;
