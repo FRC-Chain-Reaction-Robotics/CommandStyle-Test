@@ -4,7 +4,6 @@
 
 package frc.robot.commands.shoot;
 
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 
 import java.util.function.DoubleSupplier;

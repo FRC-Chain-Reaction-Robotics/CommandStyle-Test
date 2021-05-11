@@ -81,7 +81,18 @@ public class Mecanum extends SubsystemBase
 	{
 		md.driveCartesian(ySpeed, xSpeed, zRotation);
 	}
-
+	
+	/**
+   * Drive method for Mecanum platform.
+   *
+   * <p>Angles are measured clockwise from the positive X axis. The robot's speed is independent
+   * from its angle or rotation rate.
+   *
+   * @param ySpeed The robot's speed along the Y axis [-1.0..1.0]. Right is positive.
+   * @param xSpeed The robot's speed along the X axis [-1.0..1.0]. Forward is positive.
+   * @param zRotation The robot's rotation rate around the Z axis [-1.0..1.0]. Clockwise is positive.
+   * @param maxOutput The maximum output value of the drivetrain. Everything will be capped off at this value.s
+   */
 	public void drive(double ySpeed, double xSpeed, double zRotation, double maxOutput)
 	{
 		md.setMaxOutput(maxOutput);

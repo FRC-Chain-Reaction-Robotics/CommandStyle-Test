@@ -7,8 +7,8 @@ package frc.robot.commands;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.shoot.*;
 import frc.robot.subsystems.*;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
+
 
 public class InfRechAutoCommand extends SequentialCommandGroup
 {
@@ -46,8 +46,8 @@ public class InfRechAutoCommand extends SequentialCommandGroup
 			new TurnToAngleCommand(40.0, dt),
 			//	Shoot the balls we've picked up
 			new AimCommand(dt, ll),
-            new RunCommand(feeder::on, feeder).withTimeout(4),
-            new RunCommand(feeder::off, feeder).withTimeout(0.02),
+			new RunCommand(feeder::on, feeder).withTimeout(4),
+            new InstantCommand(feeder::off, feeder),
             new StopShooterCommand(shooter)
 		);
 	}

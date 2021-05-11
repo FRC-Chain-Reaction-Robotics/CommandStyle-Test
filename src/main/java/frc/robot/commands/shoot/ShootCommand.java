@@ -8,8 +8,7 @@ import frc.robot.subsystems.*;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 
 public class ShootCommand extends SequentialCommandGroup
 {
@@ -26,7 +25,7 @@ public class ShootCommand extends SequentialCommandGroup
         (
 			new StartShooterCommand(rpmGetter, shooter),
             new RunCommand(feeder::on, feeder).withTimeout(10),
-            new RunCommand(feeder::off, feeder).withTimeout(0.02),
+            new InstantCommand(feeder::off, feeder),
             new StopShooterCommand(shooter)
         );
     }

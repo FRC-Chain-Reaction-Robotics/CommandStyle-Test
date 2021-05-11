@@ -17,7 +17,6 @@ import frc.robot.commands.drive.*;
 import frc.robot.commands.shoot.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Lights.*;
-import frc.robot.subsystems.trajectorytesting.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,7 +28,7 @@ public class RobotContainer
 {
   	// The robot's subsystems and commands are defined here...
 	Limelight ll = new Limelight();
-	MecanumTraj dt = new MecanumTraj();
+	Mecanum dt = new Mecanum();
 	Shooter shooter = new Shooter();
 	Intake intake = new Intake();
 	Feeder feeder = new Feeder();
@@ -89,8 +88,8 @@ public class RobotContainer
 		shootButton.whileHeld(new ShootCommand(() -> shooter.calcRPM(ll.getTy()), shooter, feeder).alongWith(rumbleOnCommand))
 					.whenInactive(new StopShooterCommand(shooter).alongWith(rumbleOffCommand));
 
-		slowModeButton.whenActive(new RunCommand(() -> dt.setMaxOutput(Mecanum.SLOW_MODE_SPEED), dt).withTimeout(0.02))
-					.whenInactive(new RunCommand(() -> dt.setMaxOutput(Mecanum.TELEOP_SPEED), dt).withTimeout(0.02));
+		slowModeButton.whenActive(new InstantCommand(() -> dt.setMaxOutput(Mecanum.SLOW_MODE_SPEED), dt))
+					.whenInactive(new InstantCommand(() -> dt.setMaxOutput(Mecanum.TELEOP_SPEED), dt));
 
 		aimButton.whileActiveContinuous(new AimCommand(dt, ll))
 					.whenInactive(driveCommand);
@@ -116,8 +115,8 @@ public class RobotContainer
    */
 	public Command getAutonomousCommand()
 	{
-		// return new InfRechAutoCommand(dt, intake, feeder, shooter, ll);
-		return new SetWheelSpeedsTest(dt);
+		return new InfRechAutoCommand(dt, intake, feeder, shooter, ll);
+		// return new SetWheelSpeedsTest(dt);
 		// return new FollowTrajCommand(dt);
 	}
 
@@ -125,7 +124,6 @@ public class RobotContainer
 	{
 		dt.resetEncoders();
 		dt.resetGyro();
-		dt.resetPose();
 		lightzController.disabled();
 	}
 }
