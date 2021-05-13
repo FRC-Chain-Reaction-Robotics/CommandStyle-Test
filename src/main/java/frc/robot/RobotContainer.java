@@ -35,7 +35,6 @@ public class RobotContainer
 	PDP pdp = new PDP();
 	Lightz2Controller lightzController = new Lightz2Controller(shooter, feeder, dt, ll);
 	
-	XboxController driverController = new XboxController(0);
 	XboxController operatorController = new XboxController(1);
 	Saitek flightStick = new Saitek(2);
 	
@@ -45,26 +44,22 @@ public class RobotContainer
 		dt.register();
 		//#region some short commands
 		var rumbleOnCommand = new RunCommand(() -> operatorController.setRumble(RumbleType.kLeftRumble, 1.0))
-			.alongWith(new RunCommand(() -> operatorController.setRumble(RumbleType.kRightRumble, 1.0)))
-			.alongWith(new RunCommand(() -> driverController.setRumble(RumbleType.kLeftRumble, 1.0)))
-			.alongWith(new RunCommand(() -> driverController.setRumble(RumbleType.kRightRumble, 1.0)));
+			.alongWith(new RunCommand(() -> operatorController.setRumble(RumbleType.kRightRumble, 1.0)));
 			
 		var rumbleOffCommand = new RunCommand(() -> operatorController.setRumble(RumbleType.kLeftRumble, 0.0))
-			.alongWith(new RunCommand(() -> operatorController.setRumble(RumbleType.kRightRumble, 0.0)))
-			.alongWith(new RunCommand(() -> driverController.setRumble(RumbleType.kLeftRumble, 0.0)))
-			.alongWith(new RunCommand(() -> driverController.setRumble(RumbleType.kRightRumble, 0.0)));
+			.alongWith(new RunCommand(() -> operatorController.setRumble(RumbleType.kRightRumble, 0.0)));
 
-		var driveCommand = new RunCommand(() -> dt.drive(	//	use either controller ;)
-				driverController.getX(kLeft) + flightStick.getX(),
-				-driverController.getY(kLeft) - flightStick.getY(),
-				driverController.getX(kRight) + flightStick.getZRotation(),
-				Math.min(Math.abs(flightStick.getZ()), Mecanum.TELEOP_SPEED)),	//	TODO: testmaxoutput?!!
+		var driveCommand = new RunCommand(() -> dt.drive(
+				flightStick.getX(),
+				-flightStick.getY(),
+				flightStick.getZRotation(),
+				Mecanum.TELEOP_SPEED),
 			dt);
 		//#endregion
 
 		//#region controls
 		var feederUpButton = new POVButton(operatorController, 0).or(new POVButton(flightStick, 0));
-		var feederDownButton = new POVButton(operatorController, 180).or(new POVButton(flightStick, 180));	// flight stick or driverController?
+		var feederDownButton = new POVButton(operatorController, 180).or(new POVButton(flightStick, 180));
 
 		var intakeButton = new JoystickButton(operatorController, kBumperRight.value);
 		var intakeReverseButton = new JoystickButton(operatorController, kBumperLeft.value);
@@ -72,8 +67,8 @@ public class RobotContainer
 		var shootButton = new JoystickButton(operatorController, kX.value);
 		var shootReverseButton = new JoystickButton(operatorController, kY.value);
 		
-		var slowModeButton = new JoystickButton(driverController, kBumperLeft.value).or(new JoystickButton(flightStick, Saitek.SButtons.kUR.ordinal()));
-		var aimButton = new JoystickButton(driverController, kBumperRight.value).or(new JoystickButton(flightStick, Saitek.SButtons.kUL.ordinal()));
+		var slowModeButton = new JoystickButton(flightStick, Saitek.SButtons.kUR.ordinal());
+		var aimButton = new JoystickButton(flightStick, Saitek.SButtons.kUL.ordinal());
 
 		//#endregion
 
