@@ -34,5 +34,10 @@ public class Feeder extends SubsystemBase
     public void off()
     {
         feedMotor.set(ControlMode.PercentOutput, 0);
-	}
+    }
+    
+    public void frick()
+    {
+        feedMotor.set(ControlMode.PercentOutput, -1);
+    }
 }

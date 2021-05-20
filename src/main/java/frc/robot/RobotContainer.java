@@ -35,8 +35,8 @@ public class RobotContainer
 	PDP pdp = new PDP();
 	Lightz2Controller lightzController = new Lightz2Controller(shooter, feeder, dt, ll);
 	
-	XboxController operatorController = new XboxController(1);
-	Saitek flightStick = new Saitek(2);
+	XboxController operatorController = new XboxController(1); 
+	Saitek flightStick = new Saitek(0);
 	
 	/** The container for the robot. Contains subsystems, OI devices, and commands. */
 	public RobotContainer()
@@ -60,6 +60,7 @@ public class RobotContainer
 		//#region controls
 		var feederUpButton = new POVButton(operatorController, 0).or(new POVButton(flightStick, 0));
 		var feederDownButton = new POVButton(operatorController, 180).or(new POVButton(flightStick, 180));
+		var frickFeederDownButton = new JoystickButton(operatorController, kB.value);
 
 		var intakeButton = new JoystickButton(operatorController, kBumperRight.value);
 		var intakeReverseButton = new JoystickButton(operatorController, kBumperLeft.value);
@@ -76,6 +77,7 @@ public class RobotContainer
 		//#region bindings
 		feederUpButton.whileActiveContinuous(new RunCommand(feeder::on, feeder))
 			.or(feederDownButton.whileActiveContinuous(new RunCommand(feeder::reverse, feeder))
+			.or(frickFeederDownButton.whileActiveContinuous(new RunCommand(feeder::frick, feeder)))
 			.whenInactive(new RunCommand(feeder::off, feeder)));
 
 		intakeButton.whileHeld(new RunCommand(intake::on, intake))
