@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.*;
 import static edu.wpi.first.wpilibj.XboxController.Button.*;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import frc.robot.commands.*;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.shoot.*;
@@ -41,6 +42,8 @@ public class RobotContainer
 	/** The container for the robot. Contains subsystems, OI devices, and commands. */
 	public RobotContainer()
 	{
+		CameraServer.getInstance().startAutomaticCapture();
+		
 		dt.register();
 		//#region some short commands
 		var rumbleOnCommand = new RunCommand(() -> operatorController.setRumble(RumbleType.kLeftRumble, 1.0))
