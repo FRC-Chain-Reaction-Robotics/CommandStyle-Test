@@ -5,9 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
-import static edu.wpi.first.wpilibj.GenericHID.Hand.*;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.*;
 import static edu.wpi.first.wpilibj.XboxController.Button.*;
@@ -36,13 +36,14 @@ public class RobotContainer
 	PDP pdp = new PDP();
 	Lightz2Controller lightzController = new Lightz2Controller(shooter, feeder, dt, ll);
 	
-	XboxController operatorController = new XboxController(1); 
 	Saitek flightStick = new Saitek(0);
+	XboxController operatorController = new XboxController(1);
+	XboxController driverController = new XboxController(2);
 	
 	/** The container for the robot. Contains subsystems, OI devices, and commands. */
 	public RobotContainer()
 	{
-		CameraServer.getInstance().startAutomaticCapture();
+		// CameraServer.getInstance().startAutomaticCapture();
 		
 		dt.register();
 		//#region some short commands
@@ -53,9 +54,9 @@ public class RobotContainer
 			.alongWith(new RunCommand(() -> operatorController.setRumble(RumbleType.kRightRumble, 0.0)));
 
 		var driveCommand = new RunCommand(() -> dt.drive(
-				flightStick.getX(),
-				-flightStick.getY(),
-				flightStick.getZRotation(),
+				flightStick.getX() + driverController.getX(Hand.kLeft),
+				-flightStick.getY() - driverController.getY(Hand.kLeft),
+				flightStick.getZRotation() + driverController.getX(Hand.kRight),
 				Mecanum.TELEOP_SPEED),
 			dt);
 		//#endregion
@@ -64,6 +65,7 @@ public class RobotContainer
 		var feederUpButton = new POVButton(operatorController, 0).or(new POVButton(flightStick, 0));
 		var feederDownButton = new POVButton(operatorController, 180).or(new POVButton(flightStick, 180));
 		var frickFeederDownButton = new JoystickButton(operatorController, kB.value);
+		var frickFeederUpButton = new JoystickButton(operatorController, kA.value);
 
 		var intakeButton = new JoystickButton(operatorController, kBumperRight.value);
 		var intakeReverseButton = new JoystickButton(operatorController, kBumperLeft.value);
@@ -71,7 +73,7 @@ public class RobotContainer
 		var shootButton = new JoystickButton(operatorController, kX.value);
 		var shootReverseButton = new JoystickButton(operatorController, kY.value);
 		
-		var slowModeButton = new JoystickButton(flightStick, Saitek.SButtons.kUR.ordinal());
+		var slowModeButton = new JoystickButton(flightStick, Saitek.SButtons.kTrigger.ordinal());
 		var aimButton = new JoystickButton(flightStick, Saitek.SButtons.kUL.ordinal());
 
 		//#endregion
@@ -80,19 +82,20 @@ public class RobotContainer
 		//#region bindings
 		feederUpButton.whileActiveContinuous(new RunCommand(feeder::on, feeder))
 			.or(feederDownButton.whileActiveContinuous(new RunCommand(feeder::reverse, feeder))
-			.or(frickFeederDownButton.whileActiveContinuous(new RunCommand(feeder::frick, feeder)))
+			.or(frickFeederDownButton.whileActiveContinuous(new RunCommand(feeder::frick, feeder))
+			.or(frickFeederUpButton.whileActiveContinuous(new RunCommand(feeder::frickUp, feeder))))
 			.whenInactive(new RunCommand(feeder::off, feeder)));
 
 		intakeButton.whileHeld(new RunCommand(intake::on, intake))
 			.or(intakeReverseButton.whileHeld(new RunCommand(intake::reverse, intake)))
 			.whenInactive(new RunCommand(intake::off, intake));
 
-		shootButton.whileHeld(new ShootCommand(() -> shooter.calcRPM(ll.getTy()), shooter, feeder).alongWith(rumbleOnCommand))
+		shootButton.whileHeld(new ShootCommand(() -> shooter.calcRPM(ll.getTy()), shooter).alongWith(rumbleOnCommand))
 		.or(shootReverseButton.whenActive(new RunCommand(shooter::reverse, shooter)))
 					.whenInactive(new StopShooterCommand(shooter).alongWith(rumbleOffCommand));
 
-		slowModeButton.whenActive(new InstantCommand(() -> dt.setMaxOutput(Mecanum.SLOW_MODE_SPEED), dt))
-					.whenInactive(new InstantCommand(() -> dt.setMaxOutput(Mecanum.TELEOP_SPEED), dt));
+		slowModeButton.whenPressed(new InstantCommand(() -> dt.setMaxOutput(Mecanum.SLOW_MODE_SPEED), dt))
+					.whenReleased(new InstantCommand(() -> dt.setMaxOutput(Mecanum.TELEOP_SPEED), dt));
 
 		aimButton.whileActiveContinuous(new AimCommand(dt, ll))
 					.whenInactive(driveCommand);

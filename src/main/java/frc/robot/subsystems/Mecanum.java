@@ -36,7 +36,7 @@ public class Mecanum extends SubsystemBase
 
 	public static final double SLOW_MODE_SPEED = 0.25;
 	public static final double AUTON_SPEED = 0.3;
-	public static final double TELEOP_SPEED = 0.5;
+	public static final double TELEOP_SPEED = 0.65;
 
 	/** Creates a new ExampleSubsystem. */
 	public Mecanum()
@@ -97,6 +97,12 @@ public class Mecanum extends SubsystemBase
 	{
 		md.setMaxOutput(maxOutput);
 		drive(ySpeed, xSpeed, zRotation);
+	}
+
+	public void fieldOrientedDrive(double ySpeed, double xSpeed, double zRotation, double maxOutput)
+	{
+		md.setMaxOutput(maxOutput);
+		md.driveCartesian(ySpeed, xSpeed, zRotation, gyro.getAngle());
 	}
 
 	public void resetGyro()

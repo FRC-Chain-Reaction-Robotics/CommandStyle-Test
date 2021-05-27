@@ -13,20 +13,18 @@ import edu.wpi.first.wpilibj2.command.*;
 public class ShootCommand extends SequentialCommandGroup
 {
     Shooter shooter;
-    Feeder feeder;
 
-    public ShootCommand(DoubleSupplier rpmGetter, Shooter shooter, Feeder feeder)
+    public ShootCommand(DoubleSupplier rpmGetter, Shooter shooter)
     {
         this.shooter = shooter;
-        this.feeder = feeder;
-        addRequirements(shooter, feeder);
+        addRequirements(shooter);
 
         addCommands
         (
-			new StartShooterCommand(rpmGetter, shooter),
-            new RunCommand(feeder::on, feeder).withTimeout(10),
-            new InstantCommand(feeder::off, feeder),
-            new StopShooterCommand(shooter)
+			new StartShooterCommand(rpmGetter, shooter)
+            // new RunCommand(feeder::on, feeder).withTimeout(10),  // Allie wanted semi auto off.
+            // new InstantCommand(feeder::off, feeder),
+            // new StopShooterCommand(shooter)
         );
     }
 }

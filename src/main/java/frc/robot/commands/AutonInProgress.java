@@ -10,7 +10,7 @@ import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.*;
 
 
-public class InfRechAutoCommand extends SequentialCommandGroup
+public class AutonInProgress extends SequentialCommandGroup
 {
 	/**
 	 * Infinite Recharge auton for Texas Cup :)
@@ -19,7 +19,7 @@ public class InfRechAutoCommand extends SequentialCommandGroup
 	 * @param feeder
 	 * @param shooter
 	 */
-	public InfRechAutoCommand(Mecanum dt, Intake intake, Feeder feeder, Shooter shooter, Limelight ll)
+	public AutonInProgress(Mecanum dt, Intake intake, Feeder feeder, Shooter shooter, Limelight ll)
 	{
 		addRequirements(dt, intake, feeder, shooter);
 		
@@ -27,19 +27,19 @@ public class InfRechAutoCommand extends SequentialCommandGroup
 		feeder.setDefaultCommand(new RunCommand(feeder::off, feeder));
 		intake.setDefaultCommand(new RunCommand(intake::off, intake));
 
+		var dropIntake = new SequentialCommandGroup(
+			//new InstantCommand(intake::reverse, intake),
+			new JerkCommand(0.5, dt),
+			new JerkCommand(-0.5, dt));
+		
+		var shootBalls = new ParallelCommandGroup(
+			new AimCommand(dt, ll),
+			new StartShooterCommand(() -> Shooter.RPM_10FTLINE, shooter));
+
 		addCommands
 		(
 			new InstantCommand(() -> dt.setMaxOutput(Mecanum.AUTON_SPEED), dt),
-			// //	Shoots the three preloaded balls
-			new AimCommand(dt, ll),
-			new StartShooterCommand(() -> Shooter.RPM_10FTLINE, shooter),
-			new RunCommand(feeder::on, feeder).withTimeout(10),
-			
-            // new RunCommand(feeder::frick, feeder).withTimeout(2),
-            new InstantCommand(feeder::off, feeder),
-			new StopShooterCommand(shooter)//.alongWith(new JerkCommand(0.5, dt)),
-			//	Moves to the control panel area (for more ballz)
-			// new JerkCommand(-0.5, dt)
+			dropIntake.andThen(shootBalls).andThen(new RunCommand(feeder::on, feeder).withTimeout(1))
 			// new TurnToAngleCommand(130.0, dt),
 			// new DriveToDistanceCommand(1.652, dt),
 			// new TurnToAngleCommand(50, dt),

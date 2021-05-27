@@ -8,7 +8,7 @@ public class AimCommand extends CommandBase
 {
     Mecanum dt; Limelight ll;
     PIDController txController = new PIDController(0.05, 0, 0);
-    PIDController tyController = new PIDController(0.2, 0, 0);
+    PIDController tyController = new PIDController(0.1, 0, 0);
 
     public static final double ty10ft = 17;
 

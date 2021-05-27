@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PDP extends SubsystemBase
 {
-    PowerDistributionPanel pdp = new PowerDistributionPanel();    //  TODO: check CAN ID?
+    PowerDistributionPanel pdp = new PowerDistributionPanel();
 
     public PDP()
     {

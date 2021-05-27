@@ -22,8 +22,8 @@ public class Shooter extends SubsystemBase
 
 
 	double kP, kI, kD;
-	public static final double RPM_10FTLINE = 1530; 
-	public static final double RPM_18FT = 1550;
+	public static final double RPM_10FTLINE = 1350; 
+	public static final double RPM_18FT = 1650;
 
 	public static final double ERROR_TOLERANCE = 200;
 	
@@ -42,12 +42,13 @@ public class Shooter extends SubsystemBase
 		leftShooter.setInverted(true);
 		
 		leftShooter.setSmartCurrentLimit(40);
-
+		
 		shooterPID.setP(0.001);
-		shooterPID.setI(0);
-		shooterPID.setD(0.01);
-		// shooterPID.setFF(0.15);
-		// shooterPID.setIZone(IZone);
+		shooterPID.setI(0.0);
+		shooterPID.setD(0.0);
+		shooterPID.setFF(0.00015);
+		shooterPID.setIZone(200);
+
 		leftShooter.burnFlash();
 		
 		setDefaultCommand(new StopShooterCommand(this).perpetually());
@@ -63,7 +64,7 @@ public class Shooter extends SubsystemBase
 	public void shoot(double setpoint)
 	{
 		this.setpoint = setpoint;
-		shooterPID.setReference(setpoint+200, ControlType.kVelocity); // steady state err is 200, but I terms make it VIOLENT
+		shooterPID.setReference(setpoint/*+200*/, ControlType.kVelocity); // steady state err is 200, but I terms make it VIOLENT
 		
 		// math goes like:
 		// ff = setpoint * ff_gain
