@@ -74,7 +74,7 @@ public class RobotContainer
 		var shootReverseButton = new JoystickButton(operatorController, kY.value);
 		
 		var slowModeButton = new JoystickButton(flightStick, Saitek.SButtons.kTrigger.ordinal());
-		var aimButton = new JoystickButton(flightStick, Saitek.SButtons.kUL.ordinal());
+		var aimButton = new JoystickButton(flightStick, Saitek.SButtons.kUL.ordinal()).or(new JoystickButton(driverController, kBumperLeft.value));
 
 		//#endregion
 
