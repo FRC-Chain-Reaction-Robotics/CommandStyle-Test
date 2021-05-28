@@ -22,7 +22,7 @@ public final class Constants
 	public final static int RIGHT_SHOOTER_MOTOR_ID = 8;
     public final static int LEFT_SHOOTER_MOTOR_ID = 7;
 	
-	public final static int FEEDER_MOTOR_ID = 12;
+    public final static int FEEDER_MOTOR_ID = 12;
 	
     public final static int LEFT_HOPPER_MOTOR_ID = 16;
 	public final static int RIGHT_HOPPER_MOTOR_ID = 19;

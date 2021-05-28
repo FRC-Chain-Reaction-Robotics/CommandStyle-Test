@@ -33,11 +33,12 @@ public class InfRechAutoCommand extends SequentialCommandGroup
 			// //	Shoots the three preloaded balls
 			new AimCommand(dt, ll),
 			new StartShooterCommand(() -> Shooter.RPM_10FTLINE, shooter),
-			new RunCommand(feeder::on, feeder).withTimeout(10),
+			new RunCommand(feeder::on, feeder).withTimeout(4),
 			
             // new RunCommand(feeder::frick, feeder).withTimeout(2),
             new InstantCommand(feeder::off, feeder),
-			new StopShooterCommand(shooter)//.alongWith(new JerkCommand(0.5, dt)),
+			new StopShooterCommand(shooter),
+			new DriveToDistanceCommand(-1, dt)//.alongWith(new JerkCommand(0.5, dt)),
 			//	Moves to the control panel area (for more ballz)
 			// new JerkCommand(-0.5, dt)
 			// new TurnToAngleCommand(130.0, dt),

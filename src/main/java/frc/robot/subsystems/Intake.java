@@ -14,24 +14,21 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase
 {	
 	TalonSRX intakeMotor = new TalonSRX(Constants.INTAKE_MOTOR_ID);
-	TalonSRX leftHopperMotor = new TalonSRX(Constants.LEFT_HOPPER_MOTOR_ID);
-	TalonSRX rightHopperMotor = new TalonSRX(Constants.RIGHT_HOPPER_MOTOR_ID);
 	
 	public Intake()
 	{
-        rightHopperMotor.follow(leftHopperMotor);
-		intakeMotor.setInverted(true);
+		intakeMotor.setInverted(false);
 		
 		setDefaultCommand(new RunCommand(this::off, this));
 		register();
 	}
 
 	public void on() {
-		intakeMotor.set(ControlMode.PercentOutput, -1);
+		intakeMotor.set(ControlMode.PercentOutput, 0.7);
 	}
 	
 	public void reverse() {
-		intakeMotor.set(ControlMode.PercentOutput, 1);
+		intakeMotor.set(ControlMode.PercentOutput, -0.5);
 	}
 
 	public void off() {
