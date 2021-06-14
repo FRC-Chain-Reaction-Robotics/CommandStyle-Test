@@ -27,7 +27,7 @@ public final class Constants
     public final static int LEFT_HOPPER_MOTOR_ID = 16;
 	public final static int RIGHT_HOPPER_MOTOR_ID = 19;
 	
-    public final static int INTAKE_MOTOR_ID = 13;
+    public final static int INTAKE_MOTOR_ID = 6;
     
     public static final int LED_PWM_PORT = 0;
 	public static final int LEFT_LIFT = 1337;

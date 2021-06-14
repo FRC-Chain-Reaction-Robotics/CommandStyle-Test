@@ -38,7 +38,8 @@ public class InfRechAutoCommand extends SequentialCommandGroup
             // new RunCommand(feeder::frick, feeder).withTimeout(2),
             new InstantCommand(feeder::off, feeder),
 			new StopShooterCommand(shooter),
-			new DriveToDistanceCommand(-1, dt)//.alongWith(new JerkCommand(0.5, dt)),
+			new DriveToDistanceCommand(0.5, dt),
+			new DriveToDistanceCommand(-1.5, dt)//.alongWith(new JerkCommand(0.5, dt)),
 			//	Moves to the control panel area (for more ballz)
 			// new JerkCommand(-0.5, dt)
 			// new TurnToAngleCommand(130.0, dt),
