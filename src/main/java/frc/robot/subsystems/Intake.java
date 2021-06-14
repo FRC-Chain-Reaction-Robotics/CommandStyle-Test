@@ -17,7 +17,7 @@ public class Intake extends SubsystemBase
 	
 	public Intake()
 	{
-		intakeMotor.setInverted(false);
+		intakeMotor.setInverted(true);
 		
 		setDefaultCommand(new RunCommand(this::off, this));
 		register();

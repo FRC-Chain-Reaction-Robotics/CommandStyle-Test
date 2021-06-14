@@ -34,7 +34,7 @@ public class AutonInProgress extends SequentialCommandGroup
 		
 		var shootBalls = new ParallelCommandGroup(
 			new AimCommand(dt, ll),
-			new StartShooterCommand(() -> Shooter.RPM_10FTLINE, shooter));
+			new StartShooterCommand(Shooter.RPM_10FTLINE, shooter));
 
 		addCommands
 		(

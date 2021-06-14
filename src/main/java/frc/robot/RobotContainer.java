@@ -64,8 +64,8 @@ public class RobotContainer
 		//#region controls
 		var feederUpButton = new POVButton(operatorController, 0).or(new POVButton(flightStick, 0));
 		var feederDownButton = new POVButton(operatorController, 180).or(new POVButton(flightStick, 180));
-		var frickFeederDownButton = new JoystickButton(operatorController, kB.value);
-		var frickFeederUpButton = new JoystickButton(operatorController, kA.value);
+		var frickFeederDownButton = new JoystickButton(operatorController, kA.value);
+		var frickFeederUpButton = new JoystickButton(operatorController, kB.value);
 
 		var intakeButton = new JoystickButton(operatorController, kBumperRight.value);
 		var intakeReverseButton = new JoystickButton(operatorController, kBumperLeft.value);
@@ -90,7 +90,7 @@ public class RobotContainer
 			.or(intakeReverseButton.whileHeld(new RunCommand(intake::reverse, intake)))
 			.whenInactive(new RunCommand(intake::off, intake));
 
-		shootButton.whileHeld(new ShootCommand(() -> shooter.calcRPM(ll.getTy()), shooter).alongWith(rumbleOnCommand))
+		shootButton.whileHeld(new ShootCommand(Shooter.RPM_10FTLINE, shooter).alongWith(rumbleOnCommand))
 		.or(shootReverseButton.whenActive(new RunCommand(shooter::reverse, shooter)))
 					.whenInactive(new StopShooterCommand(shooter).alongWith(rumbleOffCommand));
 

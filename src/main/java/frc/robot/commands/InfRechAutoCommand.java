@@ -32,7 +32,7 @@ public class InfRechAutoCommand extends SequentialCommandGroup
 			new InstantCommand(() -> dt.setMaxOutput(Mecanum.AUTON_SPEED), dt),
 			// //	Shoots the three preloaded balls
 			new AimCommand(dt, ll),
-			new StartShooterCommand(() -> Shooter.RPM_10FTLINE, shooter),
+			new StartShooterCommand(Shooter.RPM_10FTLINE, shooter),
 			new RunCommand(feeder::on, feeder).withTimeout(4),
 			
             // new RunCommand(feeder::frick, feeder).withTimeout(2),

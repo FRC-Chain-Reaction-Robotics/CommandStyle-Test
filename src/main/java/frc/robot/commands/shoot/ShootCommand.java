@@ -6,22 +6,20 @@ package frc.robot.commands.shoot;
 
 import frc.robot.subsystems.*;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.*;
 
 public class ShootCommand extends SequentialCommandGroup
 {
     Shooter shooter;
 
-    public ShootCommand(DoubleSupplier rpmGetter, Shooter shooter)
+    public ShootCommand(double rpm, Shooter shooter)
     {
         this.shooter = shooter;
         addRequirements(shooter);
 
         addCommands
         (
-			new StartShooterCommand(rpmGetter, shooter)
+			new StartShooterCommand(rpm, shooter)
             // new RunCommand(feeder::on, feeder).withTimeout(10),  // Allie wanted semi auto off.
             // new InstantCommand(feeder::off, feeder),
             // new StopShooterCommand(shooter)
