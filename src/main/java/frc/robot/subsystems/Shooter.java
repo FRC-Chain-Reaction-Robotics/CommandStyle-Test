@@ -45,7 +45,7 @@ public class Shooter extends SubsystemBase
 		
 		shooterPID.setP(0.001);
 		shooterPID.setI(0.0);
-		shooterPID.setD(0.0);
+		shooterPID.setD(0.01);
 		//shooterPID.setFF(0.00015);
 		shooterPID.setFF(0);
 		shooterPID.setIZone(200);
