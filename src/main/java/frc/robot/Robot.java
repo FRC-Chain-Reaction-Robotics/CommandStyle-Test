@@ -76,6 +76,7 @@ public class Robot extends TimedRobot {
 		// this line or comment it out.
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
+			
 		}
 	}
 
@@ -83,6 +84,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {}
 
+	
 	@Override
 	public void testInit() {
 		// Cancels all running commands at the start of test mode.

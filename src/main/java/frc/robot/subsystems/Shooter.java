@@ -22,10 +22,10 @@ public class Shooter extends SubsystemBase
 
 
 	double kP, kI, kD;
-	public static final double RPM_10FTLINE = 1350; 
+	public static final double RPM_10FTLINE = 1330; 
 	public static final double RPM_18FT = 1650;
 
-	public static final double ERROR_TOLERANCE = 200;
+	public static final double ERROR_TOLERANCE = 50;
 	
 	double setpoint;
 
@@ -45,9 +45,9 @@ public class Shooter extends SubsystemBase
 		
 		shooterPID.setP(0.001);
 		shooterPID.setI(0.0);
-		shooterPID.setD(0.01);
-		//shooterPID.setFF(0.00015);
-		shooterPID.setFF(0);
+		shooterPID.setD(0);
+		shooterPID.setFF(0.00015);
+		// shooterPID.setFF(																																											0);
 		shooterPID.setIZone(200);
 
 		leftShooter.burnFlash();

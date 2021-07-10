@@ -35,8 +35,9 @@ public class Mecanum extends SubsystemBase
 	MecanumDrive md = new MecanumDrive(lf, lb, rf, rb);
 
 	public static final double SLOW_MODE_SPEED = 0.25;
-	public static final double AUTON_SPEED = 0.3;
-	public static final double TELEOP_SPEED = 0.65;
+	// public static final double AUTON_SPEED = 0.3;
+	public static final double AUTON_SPEED = 0.37;
+	public static final double TELEOP_SPEED = 0.75;
 
 	/** Creates a new ExampleSubsystem. */
 	public Mecanum()

@@ -52,8 +52,14 @@ public class RobotContainer
 		var rumbleOffCommand = new RunCommand(() -> operatorController.setRumble(RumbleType.kLeftRumble, 0.0))
 			.alongWith(new RunCommand(() -> operatorController.setRumble(RumbleType.kRightRumble, 0.0)));
 
+		// var driveCommand = new RunCommand(() -> dt.drive(
+		// 		flightStick.getX() + driverController.getX(Hand.kLeft),
+		// 		-flightStick.getY() - driverController.getY(Hand.kLeft),
+		// 		flightStick.getZRotation() + driverController.getX(Hand.kRight),
+		// 		Mecanum.TELEOP_SPEED),
+		// 	dt);
 		var driveCommand = new RunCommand(() -> dt.drive(
-				flightStick.getX() + driverController.getX(Hand.kLeft),
+				0,
 				-flightStick.getY() - driverController.getY(Hand.kLeft),
 				flightStick.getZRotation() + driverController.getX(Hand.kRight),
 				Mecanum.TELEOP_SPEED),

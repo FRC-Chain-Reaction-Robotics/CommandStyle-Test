@@ -30,7 +30,8 @@ public class AimCommand extends CommandBase
     @Override
     public void execute()
     {
-        dt.drive(0, tyController.calculate(ll.getTy(), 20), txController.calculate(-ll.getTx(), 0));
+        dt.drive(0, 0, txController.calculate(-ll.getTx(), 0));
+        // dt.drive(0, tyController.calculate(ll.getTy(), 20), txController.calculate(-ll.getTx(), 0));
     }
 
     @Override

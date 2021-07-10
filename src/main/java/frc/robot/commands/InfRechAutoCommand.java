@@ -31,22 +31,21 @@ public class InfRechAutoCommand extends SequentialCommandGroup
 		(
 			new InstantCommand(() -> dt.setMaxOutput(Mecanum.AUTON_SPEED), dt),
 			// //	Shoots the three preloaded balls
-			new AimCommand(dt, ll),
+			//new AimCommand(dt, ll),
 			new StartShooterCommand(Shooter.RPM_10FTLINE, shooter),
 			new RunCommand(feeder::on, feeder).withTimeout(4),
-			
+
             // new RunCommand(feeder::frick, feeder).withTimeout(2),
             new InstantCommand(feeder::off, feeder),
-			new StopShooterCommand(shooter),
-			new DriveToDistanceCommand(0.5, dt),
-			new DriveToDistanceCommand(-1.5, dt)//.alongWith(new JerkCommand(0.5, dt)),
+			new DriveToDistanceCommand(1.5, dt).alongWith(new StopShooterCommand(shooter))
+			// new DriveToDistanceCommand(0, dt)//.alongWith(new JerkCommand(0.5, dt)),
 			//	Moves to the control panel area (for more ballz)
 			// new JerkCommand(-0.5, dt)
 			// new TurnToAngleCommand(130.0, dt),
 			// new DriveToDistanceCommand(1.652, dt),
 			// new TurnToAngleCommand(50, dt),
 			// new DriveToDistanceCommand(3.799, dt),
-			// new RunCommand(intake::on, intake).withTimeout(4)
+			// new RunCommand(intake::on, intake).withTimeout 	(4)
 			// .alongWith(new RunCommand(feeder::on, feeder).withTimeout(2)
 			// 	.andThen(new InstantCommand(feeder::off, feeder))),
 			// //	Drive back to goal
@@ -64,12 +63,11 @@ public class InfRechAutoCommand extends SequentialCommandGroup
 }
 
 
-		//	Convert this to command based pls
 		//	And insert RunCommand(intake or feeder business) and ShootCommands wherever applicable
 
 		// public void selectInfRechPath()
 		// {
-		// 	auton = new Object[][]
+		// 	auton = new Object[][]89+++++++++++++++ 
 		// 	{
 			// shoot
 		// 		{turn, 130.0},
